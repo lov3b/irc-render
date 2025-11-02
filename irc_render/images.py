@@ -47,12 +47,12 @@ def download_image_bytes(
                 return None
             data = resp.read(max_bytes + 1)
             if len(data) > max_bytes:
-                logger.info("skipping %s: response exceeded byte limit", url)
+                logger.warning("skipping %s: response exceeded byte limit", url)
                 return None
             logger.debug("downloaded %s (%d bytes)", url, len(data))
             return data
     except Exception as exc:
-        logger.info("failed to download %s: %s", url, exc)
+        logger.error("failed to download %s: %s", url, exc)
         return None
 
 
