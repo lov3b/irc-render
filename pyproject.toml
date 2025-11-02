@@ -1,0 +1,11 @@
+[project]
+name = "irc-render"
+version = "0.1.0"
+description = "Render your IRC message log in a PDF"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pillow>=12.0.0",
+    "reportlab>=4.4.4",
+    "reportlab-stubs>=3.6.9.post0",
+]
