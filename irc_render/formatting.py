@@ -57,39 +57,29 @@ PATTERN_SYS2 = re.compile(r"^\s*-{2,}\s+(.*)$")
 def parse_line(line: str) -> ParsedLine:
     """Parse a single log line into structured data."""
     raw = strip_irc_formatting(line.rstrip("\n"))
-    m = PATTERN2.match(raw)
-    if m:
+    ts_nick_text = PATTERN2.match(raw) or PATTERN1.match(raw) or PATTERN3.match(raw)
+    if ts_nick_text:
         return ParsedLine(
-            timestamp=m.group(1),
-            nick=m.group(2),
-            text=m.group(3),
+            timestamp=ts_nick_text.group(1),
+            nick=ts_nick_text.group(2),
+            text=ts_nick_text.group(3),
             kind=Kind.MESSAGE,
         )
-    m = PATTERN1.match(raw)
-    if m:
-        return ParsedLine(
-            timestamp=m.group(1),
-            nick=m.group(2),
-            text=m.group(3),
-            kind=Kind.MESSAGE,
-        )
-    m = PATTERN3.match(raw)
-    if m:
-        return ParsedLine(
-            timestamp=m.group(1),
-            nick=m.group(2),
-            text=m.group(3),
-            kind=Kind.ACTION,
-        )
-    m = PATTERN_SYS1.match(raw) or PATTERN_SYS2.match(raw)
-    if m:
-        return ParsedLine(timestamp=None, nick=None, text=m.group(1), kind=Kind.SYSTEM)
-    m = re.match(r"^\s*<([^>]+)>\s+(.*)$", raw)
-    if m:
+
+    system_nick_text = PATTERN_SYS1.match(raw) or PATTERN_SYS2.match(raw)
+    if system_nick_text:
         return ParsedLine(
             timestamp=None,
-            nick=m.group(1),
-            text=m.group(2),
+            nick=None,
+            text=system_nick_text.group(1),
+            kind=Kind.SYSTEM,
+        )
+    message_nick_text = re.match(r"^\s*<([^>]+)>\s+(.*)$", raw)
+    if message_nick_text:
+        return ParsedLine(
+            timestamp=None,
+            nick=message_nick_text.group(1),
+            text=message_nick_text.group(2),
             kind=Kind.MESSAGE,
         )
     return ParsedLine(
