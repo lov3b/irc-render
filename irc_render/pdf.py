@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Iterable, Optional
 
 from reportlab.lib import colors
@@ -13,7 +14,12 @@ from reportlab.pdfgen import canvas
 from .colors import nick_to_rgb
 from .fonts import safe_register_mono_font
 from .formatting import ParsedLine
-from .images import URL_RE, download_image_bytes, load_image_reader, looks_like_image_url
+from .images import (
+    URL_RE,
+    download_image_bytes,
+    load_image_reader,
+    looks_like_image_url,
+)
 
 
 def draw_wrapped_text(c, text, x, y, max_width, font_name, font_size):
@@ -92,7 +98,9 @@ class PDFRenderer:
     def _finish_page_footer(self) -> None:
         self.canvas.setFont(self.font_name, self.config.font_size - 2)
         self.canvas.setFillColor(colors.grey)
-        self.canvas.drawRightString(self.right, self.bottom / 2, f"Page {self.page_num}")
+        self.canvas.drawRightString(
+            self.right, self.bottom / 2, f"Page {self.page_num}"
+        )
         self.canvas.setFont(self.font_name, self.config.font_size)
 
     def _new_page(self) -> None:
@@ -260,7 +268,7 @@ class PDFRenderer:
 
 
 def render_pdf(
-    input_path: str,
+    input_path: Path,
     output_path: str,
     title: str,
     page_size_name: str,
