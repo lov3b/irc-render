@@ -10,7 +10,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Convert an IRC log (.txt) to a colored PDF with inline images."
     )
     parser.add_argument("input", help="Path to IRC log .txt file")
-    parser.add_argument("output", help="Output PDF path", required=False, default=None)
+    parser.add_argument("output", help="Output PDF path", default=None)
     parser.add_argument(
         "--title",
         "-t",
